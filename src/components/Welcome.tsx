@@ -15,7 +15,7 @@ export function Welcome({ onStart }: { onStart: () => void }) {
         transition={{ delay: 0.3, duration: 0.8 }}
         className="mb-4 text-sm uppercase tracking-[0.4em] text-muted-foreground"
       >
-        A little something just for you
+        ඔයාට විතරක් හදපු දෙයක්
       </motion.div>
 
       <motion.h1
@@ -24,8 +24,8 @@ export function Welcome({ onStart }: { onStart: () => void }) {
         transition={{ delay: 0.5, duration: 1, type: "spring" }}
         className="text-5xl sm:text-7xl md:text-8xl font-bold leading-tight text-gradient-romance"
       >
-        Happy Birthday<br />
-        <span className="italic">My Love</span> 💗
+        සුභ උපන්දිනක්<br />
+        <span className="italic">මගේ ආදරේ</span> 💗
       </motion.h1>
 
       <motion.p
@@ -34,7 +34,7 @@ export function Welcome({ onStart }: { onStart: () => void }) {
         transition={{ delay: 1, duration: 0.8 }}
         className="mt-8 max-w-xl text-lg text-muted-foreground"
       >
-        I made you a tiny game. Solve it, and a surprise is waiting on the other side.
+        ඔයාට පොඩි game එකක් හැදුවා. ඒක solve කරාම ලස්සන surprise එකක් එහා පැත්තෙන් එනවා 🎁
       </motion.p>
 
       <motion.button
@@ -46,7 +46,7 @@ export function Welcome({ onStart }: { onStart: () => void }) {
         onClick={onStart}
         className="mt-12 rounded-full bg-gradient-romance px-10 py-4 text-lg font-semibold text-primary-foreground shadow-glow animate-pulse-glow"
       >
-        Play the game →
+        Game එක පටන් ගමු →
       </motion.button>
 
       <motion.div
@@ -55,7 +55,7 @@ export function Welcome({ onStart }: { onStart: () => void }) {
         transition={{ delay: 2, duration: 1 }}
         className="absolute bottom-8 text-xs text-muted-foreground"
       >
-        made with 💗 just for you
+        ඔයාට කියලා 💗 එක්ක හැදුවා
       </motion.div>
     </motion.div>
   );

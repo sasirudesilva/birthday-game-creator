@@ -108,13 +108,13 @@ export function MemoryGame({ onWin }: { onWin: () => void }) {
     >
       <div className="mb-6 text-center">
         <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-          Solve to Unlock
+          Unlock කරන්න Solve කරන්න
         </p>
         <h2 className="mt-2 text-3xl sm:text-5xl font-bold text-gradient-romance">
-          Match the pairs 💕
+          Pairs match කරන්න 💕
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Find every matching pair to unlock your gift.
+          හැම pair එකම match කරාම ඔයාගේ gift එක unlock වෙනවා.
         </p>
       </div>
 
@@ -179,7 +179,7 @@ export function MemoryGame({ onWin }: { onWin: () => void }) {
         onClick={reset}
         className="mt-8 text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
       >
-        ↻ restart
+        ↻ අලුතින් පටන් ගන්න
       </button>
     </motion.div>
   );
