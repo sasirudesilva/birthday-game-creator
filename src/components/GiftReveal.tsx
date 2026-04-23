@@ -2,8 +2,14 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 
+type SendState = "idle" | "sending" | "sent" | "error";
+
 export function GiftReveal({ onReplay }: { onReplay: () => void }) {
   const [opened, setOpened] = useState(false);
+  const [phone, setPhone] = useState("");
+  const [amount, setAmount] = useState("500");
+  const [sendState, setSendState] = useState<SendState>("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
     const fire = (particleRatio: number, opts: confetti.Options) => {
@@ -31,6 +37,39 @@ export function GiftReveal({ onReplay }: { onReplay: () => void }) {
     });
   };
 
+  const sendGift = async () => {
+    if (!phone.trim()) {
+      setErrorMsg("කරුණාකර phone number එක දාන්න 💗");
+      setSendState("error");
+      return;
+    }
+    setSendState("sending");
+    setErrorMsg("");
+    try {
+      const res = await fetch("/api/public/send-gift", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: phone.trim(), amount }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setErrorMsg(data.message || "මොකක්හරි වැරදුනා. ආයෙත් උත්සාහ කරන්න.");
+        setSendState("error");
+        return;
+      }
+      setSendState("sent");
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ["#ffd86b", "#ff6fa3", "#ffffff"],
+      });
+    } catch {
+      setErrorMsg("Network එකේ ප්‍රශ්නයක්. ආයෙත් try කරන්න.");
+      setSendState("error");
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -44,7 +83,7 @@ export function GiftReveal({ onReplay }: { onReplay: () => void }) {
         transition={{ delay: 0.2 }}
         className="text-xs uppercase tracking-[0.4em] text-muted-foreground"
       >
-        You solved it
+        ඔයා Solve කලා 🎉
       </motion.p>
       <motion.h2
         initial={{ scale: 0.8, opacity: 0 }}
@@ -52,7 +91,7 @@ export function GiftReveal({ onReplay }: { onReplay: () => void }) {
         transition={{ delay: 0.4, type: "spring" }}
         className="mt-3 text-4xl sm:text-6xl font-bold text-gradient-romance"
       >
-        Here's your gift 🎁
+        මෙන්න ඔයාගේ gift එක 🎁
       </motion.h2>
 
       <AnimatePresence mode="wait">
@@ -67,7 +106,7 @@ export function GiftReveal({ onReplay }: { onReplay: () => void }) {
             transition={{ type: "spring", damping: 12 }}
             onClick={openGift}
             className="mt-12 text-9xl drop-shadow-2xl animate-pulse-glow rounded-full p-8"
-            aria-label="Open gift"
+            aria-label="Gift එක open කරන්න"
           >
             🎁
           </motion.button>
@@ -80,19 +119,80 @@ export function GiftReveal({ onReplay }: { onReplay: () => void }) {
             className="glass mt-10 max-w-xl rounded-3xl p-8 sm:p-12 shadow-glow text-left"
           >
             <h3 className="text-2xl font-bold text-gradient-romance mb-4">
-              To my favourite person,
+              මගේ ආදරණීය ඔයාට,
             </h3>
             <p className="text-base sm:text-lg leading-relaxed text-foreground/90">
-              Every day with you feels like a celebration, but today is the one
-              the whole world should celebrate. Thank you for your laugh, your
-              kindness, and the way you make the ordinary feel like magic.
+              ඔයත් එක්ක ගත කරන හැම දවසක්ම මට පුංචි සැමරුමක් වගේ. හැබැයි අද
+              දවස නම් මුළු ලෝකෙම සමරන්න ඕන දවසක්.
               <br />
               <br />
-              I hope this year brings you everything you wish for — and more
-              little surprises along the way.
+              ඔයාගේ හිනාව, කරුණාව, සහ සාමාන්‍ය හැම දේකටම විස්මයක් එකතු කරන
+              හැටි ගැන මම බොහොම සතුටුයි. මේ අවුරුද්දේ ඔයාට ඕන හැම දේම, ඊටත්
+              වඩා පොඩි පොඩි සුන්දර surprises ටිකකුත් ලැබේවා.
+              <br />
+              <br />
+              <span className="text-rose font-semibold">
+                මගෙන් පොඩි gift එකක් ඔයාගේ phone එකට SMS එකක් විදිහට එනවා 💸✨
+              </span>{" "}
+              පහල phone number එක දාලා "Send my gift" click කරන්න.
             </p>
+
+            <div className="mt-6 space-y-3">
+              <div>
+                <label className="block text-xs uppercase tracking-widest text-muted-foreground mb-1">
+                  ඔයාගේ Phone Number
+                </label>
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+9477XXXXXXX"
+                  disabled={sendState === "sending" || sendState === "sent"}
+                  className="w-full rounded-xl border border-border bg-input px-4 py-3 text-foreground outline-none focus:ring-2 focus:ring-rose disabled:opacity-50"
+                />
+              </div>
+              <div>
+                <label className="block text-xs uppercase tracking-widest text-muted-foreground mb-1">
+                  ලැබෙන මුදල (LKR)
+                </label>
+                <input
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  disabled={sendState === "sending" || sendState === "sent"}
+                  className="w-full rounded-xl border border-border bg-input px-4 py-3 text-foreground outline-none focus:ring-2 focus:ring-rose disabled:opacity-50"
+                />
+              </div>
+
+              {sendState === "error" && (
+                <p className="text-sm text-destructive">{errorMsg}</p>
+              )}
+
+              {sendState !== "sent" ? (
+                <motion.button
+                  whileHover={{ scale: sendState === "sending" ? 1 : 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={sendGift}
+                  disabled={sendState === "sending"}
+                  className="w-full rounded-full bg-gradient-romance px-6 py-3 text-base font-semibold text-primary-foreground shadow-glow disabled:opacity-70"
+                >
+                  {sendState === "sending"
+                    ? "යවනවා... 💗"
+                    : "Send my gift 💸"}
+                </motion.button>
+              ) : (
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="rounded-full bg-gradient-romance px-6 py-3 text-base font-semibold text-primary-foreground text-center"
+                >
+                  ✓ SMS එක ඔයාගේ phone එකට ගියා! 🎉
+                </motion.div>
+              )}
+            </div>
+
             <p className="mt-6 text-right italic text-rose">
-              — Yours, always 💗
+              — හැමදාටම ඔයාගේ 💗
             </p>
           </motion.div>
         )}
@@ -106,7 +206,7 @@ export function GiftReveal({ onReplay }: { onReplay: () => void }) {
           onClick={onReplay}
           className="mt-10 text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
         >
-          ↻ play again
+          ↻ ආයෙත් play කරන්න
         </motion.button>
       )}
     </motion.div>
