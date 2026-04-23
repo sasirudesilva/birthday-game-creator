@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/api/public/send-gift")({
+  // @ts-expect-error - server handlers are supported at runtime by TanStack Start
   server: {
     handlers: {
-      POST: async ({ request }) => {
+      POST: async ({ request }: { request: Request }) => {
         try {
           const body = (await request.json()) as {
             phone?: string;
