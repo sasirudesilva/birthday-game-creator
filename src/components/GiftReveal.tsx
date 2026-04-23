@@ -2,14 +2,13 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 
-type SendState = "idle" | "sending" | "sent" | "error";
-
 export function GiftReveal({ onReplay }: { onReplay: () => void }) {
   const [opened, setOpened] = useState(false);
-  const [phone, setPhone] = useState("");
-  const [amount, setAmount] = useState("500");
-  const [sendState, setSendState] = useState<SendState>("idle");
-  const [errorMsg, setErrorMsg] = useState("");
+  const [showGift, setShowGift] = useState(false);
+  const [bankNumber, setBankNumber] = useState("");
+  const [transferState, setTransferState] = useState<
+    "idle" | "transferring" | "done"
+  >("idle");
 
   useEffect(() => {
     const fire = (particleRatio: number, opts: confetti.Options) => {
@@ -24,7 +23,6 @@ export function GiftReveal({ onReplay }: { onReplay: () => void }) {
     fire(0.2, { spread: 60 });
     fire(0.35, { spread: 100, decay: 0.91, scalar: 0.9 });
     fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-    fire(0.1, { spread: 120, startVelocity: 45 });
   }, []);
 
   const openGift = () => {
@@ -35,39 +33,23 @@ export function GiftReveal({ onReplay }: { onReplay: () => void }) {
       origin: { y: 0.5 },
       colors: ["#ff6fa3", "#ffd86b", "#ffffff", "#ff4f81"],
     });
+    // Show money gift after a delay
+    setTimeout(() => setShowGift(true), 4000);
   };
 
-  const sendGift = async () => {
-    if (!phone.trim()) {
-      setErrorMsg("කරුණාකර phone number එක දාන්න 💗");
-      setSendState("error");
-      return;
-    }
-    setSendState("sending");
-    setErrorMsg("");
-    try {
-      const res = await fetch("/api/public/send-gift", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: phone.trim(), amount }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setErrorMsg(data.message || "මොකක්හරි වැරදුනා. ආයෙත් උත්සාහ කරන්න.");
-        setSendState("error");
-        return;
-      }
-      setSendState("sent");
+  const sendTransfer = () => {
+    if (!bankNumber.trim() || bankNumber.trim().length < 5) return;
+    setTransferState("transferring");
+    // Simulate the transfer animation for ~3.5 seconds
+    setTimeout(() => {
+      setTransferState("done");
       confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
+        particleCount: 120,
+        spread: 90,
+        origin: { y: 0.5 },
         colors: ["#ffd86b", "#ff6fa3", "#ffffff"],
       });
-    } catch {
-      setErrorMsg("Network එකේ ප්‍රශ්නයක්. ආයෙත් try කරන්න.");
-      setSendState("error");
-    }
+    }, 3500);
   };
 
   return (
@@ -112,88 +94,139 @@ export function GiftReveal({ onReplay }: { onReplay: () => void }) {
           </motion.button>
         ) : (
           <motion.div
-            key="letter"
+            key="content"
             initial={{ scale: 0.6, y: 40, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
             transition={{ type: "spring", damping: 18 }}
-            className="glass mt-10 max-w-xl rounded-3xl p-8 sm:p-12 shadow-glow text-left"
+            className="mt-10 flex w-full max-w-xl flex-col gap-6"
           >
-            <h3 className="text-2xl font-bold text-gradient-romance mb-4">
-              මගේ ආදරණීය ඔයාට,
-            </h3>
-            <p className="text-base sm:text-lg leading-relaxed text-foreground/90">
-              ඔයත් එක්ක ගත කරන හැම දවසක්ම මට පුංචි සැමරුමක් වගේ. හැබැයි අද
-              දවස නම් මුළු ලෝකෙම සමරන්න ඕන දවසක්.
-              <br />
-              <br />
-              ඔයාගේ හිනාව, කරුණාව, සහ සාමාන්‍ය හැම දේකටම විස්මයක් එකතු කරන
-              හැටි ගැන මම බොහොම සතුටුයි. මේ අවුරුද්දේ ඔයාට ඕන හැම දේම, ඊටත්
-              වඩා පොඩි පොඩි සුන්දර surprises ටිකකුත් ලැබේවා.
-              <br />
-              <br />
-              <span className="text-rose font-semibold">
-                මගෙන් පොඩි gift එකක් ඔයාගේ phone එකට SMS එකක් විදිහට එනවා 💸✨
-              </span>{" "}
-              පහල phone number එක දාලා "Send my gift" click කරන්න.
-            </p>
-
-            <div className="mt-6 space-y-3">
-              <div>
-                <label className="block text-xs uppercase tracking-widest text-muted-foreground mb-1">
-                  ඔයාගේ Phone Number
-                </label>
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+9477XXXXXXX"
-                  disabled={sendState === "sending" || sendState === "sent"}
-                  className="w-full rounded-xl border border-border bg-input px-4 py-3 text-foreground outline-none focus:ring-2 focus:ring-rose disabled:opacity-50"
-                />
-              </div>
-              <div>
-                <label className="block text-xs uppercase tracking-widest text-muted-foreground mb-1">
-                  ලැබෙන මුදල (LKR)
-                </label>
-                <input
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  disabled={sendState === "sending" || sendState === "sent"}
-                  className="w-full rounded-xl border border-border bg-input px-4 py-3 text-foreground outline-none focus:ring-2 focus:ring-rose disabled:opacity-50"
-                />
-              </div>
-
-              {sendState === "error" && (
-                <p className="text-sm text-destructive">{errorMsg}</p>
-              )}
-
-              {sendState !== "sent" ? (
-                <motion.button
-                  whileHover={{ scale: sendState === "sending" ? 1 : 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={sendGift}
-                  disabled={sendState === "sending"}
-                  className="w-full rounded-full bg-gradient-romance px-6 py-3 text-base font-semibold text-primary-foreground shadow-glow disabled:opacity-70"
-                >
-                  {sendState === "sending"
-                    ? "යවනවා... 💗"
-                    : "Send my gift 💸"}
-                </motion.button>
-              ) : (
-                <motion.div
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="rounded-full bg-gradient-romance px-6 py-3 text-base font-semibold text-primary-foreground text-center"
-                >
-                  ✓ SMS එක ඔයාගේ phone එකට ගියා! 🎉
-                </motion.div>
-              )}
+            {/* Love Letter */}
+            <div className="glass rounded-3xl p-8 sm:p-12 shadow-glow text-left">
+              <h3 className="text-2xl font-bold text-gradient-romance mb-4">
+                මගේ ආදරණීය ඔයාට,
+              </h3>
+              <p className="text-base sm:text-lg leading-relaxed text-foreground/90">
+                ඔයත් එක්ක ගත කරන හැම දවසක්ම මට පුංචි සැමරුමක් වගේ. හැබැයි අද
+                දවස නම් මුළු ලෝකෙම සමරන්න ඕන දවසක්.
+                <br /><br />
+                ඔයාගේ හිනාව, කරුණාව, සහ සාමාන්‍ය හැම දේකටම විස්මයක් එකතු කරන
+                හැටි ගැන මම බොහොම සතුටුයි. මේ අවුරුද්දේ ඔයාට ඕන හැම දේම, ඊටත්
+                වඩා පොඩි පොඩි සුන්දර surprises ටිකකුත් ලැබේවා.
+              </p>
+              <p className="mt-6 text-right italic text-rose">
+                — හැමදාටම ඔයාගේ 💗
+              </p>
             </div>
 
-            <p className="mt-6 text-right italic text-rose">
-              — හැමදාටම ඔයාගේ 💗
-            </p>
+            {/* Money gift section - appears after delay */}
+            <AnimatePresence>
+              {showGift && (
+                <motion.div
+                  initial={{ opacity: 0, y: 40, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ type: "spring", damping: 16, delay: 0.1 }}
+                  className="glass rounded-3xl p-8 shadow-glow text-center"
+                >
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                    className="text-sm text-muted-foreground mb-2"
+                  >
+                    ඒ විතරක් නෙවෙයි...
+                  </motion.p>
+                  <motion.h3
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.5, type: "spring" }}
+                    className="text-2xl sm:text-3xl font-bold text-gradient-romance mb-1"
+                  >
+                    මෙන්න මගේ තවත් පොඩි gift එකක් 💸
+                  </motion.h3>
+
+                  <AnimatePresence mode="wait">
+                    {transferState === "idle" && (
+                      <motion.div
+                        key="form"
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -15 }}
+                        transition={{ delay: 0.7 }}
+                        className="mt-6 space-y-4 text-left"
+                      >
+                        {/* Amount display */}
+                        <div className="flex items-center justify-center gap-2 py-3">
+                          <span className="text-4xl font-bold text-gradient-romance">
+                            රු. 5,000
+                          </span>
+                          <span className="text-2xl">💰</span>
+                        </div>
+
+                        <div>
+                          <label className="block text-xs uppercase tracking-widest text-muted-foreground mb-1">
+                            ඔයාගේ Bank Account Number
+                          </label>
+                          <input
+                            type="text"
+                            value={bankNumber}
+                            onChange={(e) => {
+                              const v = e.target.value.replace(/[^0-9\s-]/g, "");
+                              setBankNumber(v);
+                            }}
+                            placeholder="XXXX XXXX XXXX XXXX"
+                            maxLength={30}
+                            className="w-full rounded-xl border border-border bg-input px-4 py-3 text-foreground text-center text-lg tracking-widest outline-none focus:ring-2 focus:ring-rose"
+                          />
+                        </div>
+
+                        <motion.button
+                          whileHover={{ scale: 1.03 }}
+                          whileTap={{ scale: 0.97 }}
+                          onClick={sendTransfer}
+                          disabled={!bankNumber.trim() || bankNumber.trim().length < 5}
+                          className="w-full rounded-full bg-gradient-romance px-6 py-3 text-base font-semibold text-primary-foreground shadow-glow disabled:opacity-40"
+                        >
+                          Send my gift 💸
+                        </motion.button>
+                      </motion.div>
+                    )}
+
+                    {transferState === "transferring" && (
+                      <motion.div
+                        key="animation"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="mt-8 flex flex-col items-center gap-6"
+                      >
+                        <TransferAnimation />
+                        <p className="text-sm text-muted-foreground animate-pulse">
+                          සල්ලි යවනවා...
+                        </p>
+                      </motion.div>
+                    )}
+
+                    {transferState === "done" && (
+                      <motion.div
+                        key="done"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ type: "spring", damping: 12 }}
+                        className="mt-6 flex flex-col items-center gap-3"
+                      >
+                        <div className="text-5xl">✅</div>
+                        <h4 className="text-xl font-bold text-gradient-romance">
+                          Transfer successful!
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          රු. 5,000 ඔයාගේ account එකට ගියා 💗
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>
@@ -210,5 +243,63 @@ export function GiftReveal({ onReplay }: { onReplay: () => void }) {
         </motion.button>
       )}
     </motion.div>
+  );
+}
+
+/* ---------- Bank Transfer Animation ---------- */
+function TransferAnimation() {
+  return (
+    <div className="relative flex w-full max-w-sm items-center justify-between px-4 py-6">
+      {/* Sender */}
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ type: "spring", damping: 14 }}
+        className="glass flex h-16 w-16 items-center justify-center rounded-2xl text-2xl shadow-glow"
+      >
+        🏦
+      </motion.div>
+
+      {/* Money flying across */}
+      <div className="relative flex-1 mx-2 h-8 overflow-hidden">
+        {[0, 0.4, 0.8, 1.2, 1.6].map((delay, i) => (
+          <motion.div
+            key={i}
+            initial={{ x: 0, opacity: 0, scale: 0.6 }}
+            animate={{
+              x: [0, 60, 120, 180],
+              opacity: [0, 1, 1, 0],
+              scale: [0.6, 1, 1, 0.6],
+            }}
+            transition={{
+              duration: 1.5,
+              delay,
+              repeat: 1,
+              ease: "easeInOut",
+            }}
+            className="absolute left-0 top-1/2 -translate-y-1/2 text-lg"
+          >
+            💵
+          </motion.div>
+        ))}
+        {/* Animated line */}
+        <motion.div
+          className="absolute top-1/2 left-0 h-0.5 -translate-y-1/2 bg-gradient-romance rounded-full"
+          initial={{ width: "0%" }}
+          animate={{ width: "100%" }}
+          transition={{ duration: 3, ease: "easeInOut" }}
+        />
+      </div>
+
+      {/* Receiver */}
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ type: "spring", damping: 14, delay: 0.3 }}
+        className="glass flex h-16 w-16 items-center justify-center rounded-2xl text-2xl shadow-glow"
+      >
+        💗
+      </motion.div>
+    </div>
   );
 }
