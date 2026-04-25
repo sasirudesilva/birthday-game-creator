@@ -377,71 +377,18 @@ export function GiftReveal({ onFinish }: { onFinish: () => void }) {
                           📦
                         </motion.div>
                         <h4 className="text-xl font-bold text-gradient-romance">
-                          ඔයාගේ දොරටම ආවා! 🎉
-                        </h4>
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={openPackage}
-                          className="rounded-full bg-gradient-romance px-8 py-3 text-base font-semibold text-primary-foreground shadow-glow animate-pulse-glow"
-                        >
-                          Package එක open කරන්න ✨
-                        </motion.button>
-                      </motion.div>
-                    )}
-
-                    {packageState === "opened" && (
-                      <motion.div
-                        key="opened"
-                        initial={{ opacity: 0, scale: 0.6 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ type: "spring", damping: 14 }}
-                        className="mt-6 flex flex-col items-center gap-4"
-                      >
-                        <div className="flex gap-3 text-5xl">
-                          <motion.span
-                            initial={{ y: 30, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.1 }}
-                          >
-                            🌹
-                          </motion.span>
-                          <motion.span
-                            initial={{ y: 30, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.3 }}
-                          >
-                            🍫
-                          </motion.span>
-                          <motion.span
-                            initial={{ y: 30, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.5 }}
-                          >
-                            💍
-                          </motion.span>
-                          <motion.span
-                            initial={{ y: 30, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.7 }}
-                          >
-                            🧸
-                          </motion.span>
-                        </div>
-                        <h4 className="text-xl font-bold text-gradient-romance">
-                          ඔයාට විතරක් 💕
+                          ඔයා ඉන්න තැනටම ආවා! 🎉
                         </h4>
                         <p className="text-sm text-muted-foreground max-w-xs">
-                          පොඩි මල් කොටයක්, chocolates, ලස්සන නෑකියක් සහ
-                          මගේ ආදරෙන් hug එකක් 🧸
+                          ඇතුලේ මොකද්ද කියලා... ඒක surprise එකක් 💕
                         </p>
                         <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={onFinish}
-                          className="mt-2 rounded-full bg-gradient-romance px-8 py-3 text-base font-semibold text-primary-foreground shadow-glow"
+                          className="mt-2 rounded-full bg-gradient-romance px-8 py-3 text-base font-semibold text-primary-foreground shadow-glow animate-pulse-glow"
                         >
-                          ❤️ අන්තිමට එක්කන් යන්න
+                          ❤️ අන්තිමට →
                         </motion.button>
                       </motion.div>
                     )}
