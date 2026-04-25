@@ -4,6 +4,7 @@ import { AnimatePresence } from "framer-motion";
 import { Welcome } from "@/components/Welcome";
 import { MemoryGame } from "@/components/MemoryGame";
 import { GiftReveal } from "@/components/GiftReveal";
+import { FinalOutro } from "@/components/FinalOutro";
 import { FloatingHearts } from "@/components/FloatingHearts";
 
 export const Route = createFileRoute("/")({
@@ -31,7 +32,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type Stage = "welcome" | "game" | "gift";
+type Stage = "welcome" | "game" | "gift" | "outro";
 
 function Index() {
   const [stage, setStage] = useState<Stage>("welcome");
@@ -45,7 +46,7 @@ function Index() {
         <div className="absolute bottom-0 left-1/3 h-96 w-96 rounded-full bg-primary/20 blur-3xl" />
       </div>
 
-      <FloatingHearts />
+      {stage !== "outro" && <FloatingHearts />}
 
       <AnimatePresence mode="wait">
         {stage === "welcome" && (
@@ -55,9 +56,13 @@ function Index() {
           <MemoryGame key="game" onWin={() => setStage("gift")} />
         )}
         {stage === "gift" && (
-          <GiftReveal key="gift" onReplay={() => setStage("welcome")} />
+          <GiftReveal key="gift" onFinish={() => setStage("outro")} />
+        )}
+        {stage === "outro" && (
+          <FinalOutro key="outro" onReplay={() => setStage("welcome")} />
         )}
       </AnimatePresence>
     </main>
   );
 }
+

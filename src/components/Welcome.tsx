@@ -15,7 +15,7 @@ export function Welcome({ onStart }: { onStart: () => void }) {
         transition={{ delay: 0.3, duration: 0.8 }}
         className="mb-4 text-sm uppercase tracking-[0.4em] text-muted-foreground"
       >
-        ඔයාට විතරක් හදපු දෙයක්
+        ලස්සන surprise එකක් ✨
       </motion.div>
 
       <motion.h1
@@ -34,7 +34,7 @@ export function Welcome({ onStart }: { onStart: () => void }) {
         transition={{ delay: 1, duration: 0.8 }}
         className="mt-8 max-w-xl text-lg text-muted-foreground"
       >
-        ඔයාට පොඩි game එකක් හැදුවා. ඒක solve කරාම ලස්සන surprise එකක් එහා පැත්තෙන් එනවා 🎁
+        පොඩි game එකක් solve කරාම... ලොකු ලස්සන surprise එකක් ඔයාට wait වෙනවා 🎁✨
       </motion.p>
 
       <motion.button
@@ -55,7 +55,7 @@ export function Welcome({ onStart }: { onStart: () => void }) {
         transition={{ delay: 2, duration: 1 }}
         className="absolute bottom-8 text-xs text-muted-foreground"
       >
-        ඔයාට කියලා 💗 එක්ක හැදුවා
+        💗 එක්ක හැදුවා
       </motion.div>
     </motion.div>
   );
