@@ -1,11 +1,32 @@
 import { useEffect, useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import cardRose from "@/assets/card-rose.jpg";
+import cardCake from "@/assets/card-cake.jpg";
+import cardTeddy from "@/assets/card-teddy.jpg";
+import cardCheers from "@/assets/card-cheers.jpg";
+import cardGift from "@/assets/card-gift.jpg";
+import cardHeart from "@/assets/card-heart.jpg";
+import cardLetter from "@/assets/card-letter.jpg";
+import cardFlowers from "@/assets/card-flowers.jpg";
 
-const EMOJIS = ["💗", "🌹", "🎂", "🎁", "✨", "🥂", "🧸", "💌"];
+type CardImage = { id: string; src: string; alt: string };
+
+const IMAGES: CardImage[] = [
+  { id: "rose", src: cardRose, alt: "Pink rose" },
+  { id: "cake", src: cardCake, alt: "Birthday cupcake" },
+  { id: "teddy", src: cardTeddy, alt: "Teddy bear with heart" },
+  { id: "cheers", src: cardCheers, alt: "Champagne cheers" },
+  { id: "gift", src: cardGift, alt: "Pink gift box" },
+  { id: "heart", src: cardHeart, alt: "Glowing heart" },
+  { id: "letter", src: cardLetter, alt: "Love letter" },
+  { id: "flowers", src: cardFlowers, alt: "Tulip bouquet" },
+];
 
 type Card = {
   id: number;
-  emoji: string;
+  imageId: string;
+  src: string;
+  alt: string;
   flipped: boolean;
   matched: boolean;
 };
@@ -20,10 +41,12 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 function buildDeck(): Card[] {
-  const pairs = [...EMOJIS, ...EMOJIS];
-  return shuffle(pairs).map((emoji, id) => ({
+  const pairs = [...IMAGES, ...IMAGES];
+  return shuffle(pairs).map((img, id) => ({
     id,
-    emoji,
+    imageId: img.id,
+    src: img.src,
+    alt: img.alt,
     flipped: false,
     matched: false,
   }));
@@ -56,7 +79,7 @@ export function MemoryGame({ onWin }: { onWin: () => void }) {
     const cardA = cards.find((c) => c.id === a)!;
     const cardB = cards.find((c) => c.id === b)!;
 
-    if (cardA.emoji === cardB.emoji) {
+    if (cardA.imageId === cardB.imageId) {
       setTimeout(() => {
         setCards((prev) =>
           prev.map((c) =>
@@ -108,13 +131,13 @@ export function MemoryGame({ onWin }: { onWin: () => void }) {
     >
       <div className="mb-6 text-center">
         <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-          Unlock කරන්න Solve කරන්න
+          Pairs match කරලා unlock කරන්න
         </p>
         <h2 className="mt-2 text-3xl sm:text-5xl font-bold text-gradient-romance">
-          Pairs match කරන්න 💕
+          ලස්සන photos යුගල කරන්න 💕
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          හැම pair එකම match කරාම ඔයාගේ gift එක unlock වෙනවා.
+          හැම pair එකම match කරාම ඔයාගේ surprise එක unlock වෙනවා.
         </p>
       </div>
 
@@ -143,6 +166,7 @@ export function MemoryGame({ onWin }: { onWin: () => void }) {
               whileTap={{ scale: 0.95 }}
               className="relative aspect-square w-full"
               style={{ perspective: 1000 }}
+              aria-label={showFace ? card.alt : "Hidden card"}
             >
               <motion.div
                 className="absolute inset-0"
@@ -159,7 +183,7 @@ export function MemoryGame({ onWin }: { onWin: () => void }) {
                 </div>
                 {/* face */}
                 <div
-                  className={`absolute inset-0 rounded-2xl glass flex items-center justify-center text-3xl sm:text-5xl ${
+                  className={`absolute inset-0 overflow-hidden rounded-2xl glass ${
                     card.matched ? "ring-2 ring-rose shadow-glow" : ""
                   }`}
                   style={{
@@ -167,7 +191,23 @@ export function MemoryGame({ onWin }: { onWin: () => void }) {
                     transform: "rotateY(180deg)",
                   }}
                 >
-                  {card.emoji}
+                  <img
+                    src={card.src}
+                    alt={card.alt}
+                    width={512}
+                    height={512}
+                    loading="lazy"
+                    className="h-full w-full object-cover"
+                  />
+                  {card.matched && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="absolute inset-0 flex items-center justify-center bg-rose/20 text-3xl"
+                    >
+                      💖
+                    </motion.div>
+                  )}
                 </div>
               </motion.div>
             </motion.button>
