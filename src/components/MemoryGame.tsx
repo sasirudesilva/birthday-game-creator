@@ -215,12 +215,20 @@ export function MemoryGame({ onWin }: { onWin: () => void }) {
         })}
       </div>
 
-      <button
-        onClick={reset}
-        className="mt-8 text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-      >
-        ↻ අලුතින් පටන් ගන්න
-      </button>
+      <div className="mt-8 flex items-center gap-6">
+        <button
+          onClick={reset}
+          className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+        >
+          ↻ අලුතින් පටන් ගන්න
+        </button>
+        <button
+          onClick={onWin}
+          className="text-xs text-muted-foreground/60 underline-offset-4 hover:text-muted-foreground hover:underline"
+        >
+          (skip → testing)
+        </button>
+      </div>
     </motion.div>
   );
 }
