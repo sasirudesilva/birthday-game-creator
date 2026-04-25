@@ -12,7 +12,7 @@ export function GiftReveal({ onFinish }: { onFinish: () => void }) {
     "idle" | "transferring" | "done"
   >("idle");
   const [packageState, setPackageState] = useState<
-    "idle" | "delivering" | "delivered" | "opened"
+    "idle" | "delivering" | "delivered"
   >("idle");
 
   useEffect(() => {
