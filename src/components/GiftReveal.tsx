@@ -69,16 +69,6 @@ export function GiftReveal({ onFinish }: { onFinish: () => void }) {
     }, 4000);
   };
 
-  const openPackage = () => {
-    setPackageState("opened");
-    confetti({
-      particleCount: 200,
-      spread: 120,
-      origin: { y: 0.5 },
-      colors: ["#ff6fa3", "#ffd86b", "#ffffff", "#ff4f81", "#ffb3c8"],
-    });
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
