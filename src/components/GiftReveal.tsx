@@ -312,7 +312,7 @@ export function GiftReveal({ onFinish }: { onFinish: () => void }) {
                     අන්තිම surprise එක
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    ඔයාට කැමති වෙයි කියලා hope කරනවා 💕
+                    ඔයා ඉන්න තැනටම එනවා 💕
                   </p>
 
                   <AnimatePresence mode="wait">
@@ -325,15 +325,14 @@ export function GiftReveal({ onFinish }: { onFinish: () => void }) {
                         className="mt-6 flex flex-col items-center gap-5"
                       >
                         <motion.div
-                          animate={{ y: [0, -10, 0] }}
-                          transition={{ duration: 2, repeat: Infinity }}
-                          className="text-7xl"
+                          animate={{ y: [0, -10, 0], rotate: [-3, 3, -3] }}
+                          transition={{ duration: 2.5, repeat: Infinity }}
+                          className="text-7xl drop-shadow-2xl"
                         >
                           🎁
                         </motion.div>
                         <p className="text-sm text-foreground/80 max-w-xs">
-                          ලස්සන පොඩි package එකක් — රෝස මල්, chocolates,
-                          සහ පොඩි jewelry එකක් ඇතුළේ ✨
+                          පොඩි surprise package එකක් ඔයා ඉන්න තැනටම යවනවා ✨
                         </p>
                         <motion.button
                           whileHover={{ scale: 1.03 }}
@@ -341,7 +340,7 @@ export function GiftReveal({ onFinish }: { onFinish: () => void }) {
                           onClick={orderPackage}
                           className="w-full rounded-full bg-gradient-romance px-6 py-3 text-base font-semibold text-primary-foreground shadow-glow"
                         >
-                          Package එක යවන්න 🚚
+                          මට යවන්න 🚚
                         </motion.button>
                       </motion.div>
                     )}
@@ -356,7 +355,7 @@ export function GiftReveal({ onFinish }: { onFinish: () => void }) {
                       >
                         <DeliveryAnimation />
                         <p className="text-sm text-muted-foreground animate-pulse">
-                          ඔයාගේ ගෙදරට එනවා...
+                          ඔයා ඉන්න තැනට එනවා...
                         </p>
                       </motion.div>
                     )}
