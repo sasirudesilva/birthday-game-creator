@@ -34,7 +34,7 @@ export function Welcome({ onStart }: { onStart: () => void }) {
         transition={{ delay: 1, duration: 0.8 }}
         className="mt-8 max-w-xl text-lg text-muted-foreground"
       >
-        පොඩි game එකක් solve කරාම... ලොකු ලස්සන surprise එකක් ඔයාට wait වෙනවා 🎁✨
+        පොඩි game එකක් solve කරාම... ලොකු ලස්සන surprise එකක් ඔයාට 🎁✨
       </motion.p>
 
       <motion.button
@@ -49,14 +49,6 @@ export function Welcome({ onStart }: { onStart: () => void }) {
         Game එක පටන් ගමු →
       </motion.button>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 1 }}
-        className="absolute bottom-8 text-xs text-muted-foreground"
-      >
-        💗 එක්ක හැදුවා
-      </motion.div>
     </motion.div>
   );
 }
