@@ -20,20 +20,34 @@ export function SpinWheel({
   const [spinning, setSpinning] = useState(false);
   const [result, setResult] = useState<number | null>(null);
 
-  const segAngle = 360 / PRIZES.length;
+  const N = PRIZES.length;
+  const segAngle = 360 / N;
+  const SIZE = 360; // svg viewBox size
+  const R = SIZE / 2;
+
+  // Build wedge path for segment i
+  const wedgePath = (i: number) => {
+    const start = i * segAngle - 90; // start at top
+    const end = (i + 1) * segAngle - 90;
+    const sx = R + R * Math.cos((start * Math.PI) / 180);
+    const sy = R + R * Math.sin((start * Math.PI) / 180);
+    const ex = R + R * Math.cos((end * Math.PI) / 180);
+    const ey = R + R * Math.sin((end * Math.PI) / 180);
+    const largeArc = segAngle > 180 ? 1 : 0;
+    return `M ${R} ${R} L ${sx} ${sy} A ${R} ${R} 0 ${largeArc} 1 ${ex} ${ey} Z`;
+  };
 
   const spin = () => {
     if (spinning) return;
     setSpinning(true);
     setResult(null);
 
-    let chosen = Math.floor(Math.random() * PRIZES.length);
-    // Avoid landing on "Spin Again!" too — but allow re-spin behavior
+    const chosen = Math.floor(Math.random() * N);
     const turns = 6;
-    // Pointer is at top (0deg). Segment i is centered at i*segAngle + segAngle/2.
-    // We want chosen segment center to be at top after rotation.
+    // Pointer is at top. Segment i center angle (cw from top) = i*segAngle + segAngle/2
     const targetAngle = 360 - (chosen * segAngle + segAngle / 2);
-    const finalRotation = rotation + turns * 360 + (targetAngle - (rotation % 360));
+    const finalRotation =
+      rotation + turns * 360 + (targetAngle - (rotation % 360));
 
     setRotation(finalRotation);
 
@@ -87,50 +101,122 @@ export function SpinWheel({
 
       <div className="relative mt-10 flex items-center justify-center">
         {/* Pointer */}
-        <div className="absolute -top-3 left-1/2 z-20 -translate-x-1/2">
-          <div className="h-0 w-0 border-x-[14px] border-t-[24px] border-x-transparent border-t-rose drop-shadow-lg" />
+        <div className="absolute -top-2 left-1/2 z-20 -translate-x-1/2">
+          <div className="h-0 w-0 border-x-[14px] border-t-[26px] border-x-transparent border-t-rose drop-shadow-lg" />
         </div>
 
-        {/* Wheel */}
         <motion.div
           animate={{ rotate: rotation }}
           transition={{ duration: 4.5, ease: [0.17, 0.67, 0.16, 0.99] }}
-          className="relative h-72 w-72 sm:h-96 sm:w-96 rounded-full shadow-glow"
+          className="rounded-full shadow-glow"
           style={{
-            background: `conic-gradient(${PRIZES.map((p, i) => {
-              const start = (i / PRIZES.length) * 360;
-              const end = ((i + 1) / PRIZES.length) * 360;
-              return `${p.color} ${start}deg ${end}deg`;
-            }).join(", ")})`,
+            width: "min(85vw, 420px)",
+            height: "min(85vw, 420px)",
           }}
         >
-          {PRIZES.map((p, i) => {
-            const angle = i * segAngle + segAngle / 2;
-            return (
-              <div
-                key={i}
-                className="absolute left-1/2 top-1/2 origin-[0_0]"
-                style={{
-                  transform: `rotate(${angle}deg) translateY(-42%)`,
-                }}
-              >
-                <div
-                  className="-translate-x-1/2 text-center text-white font-bold drop-shadow"
-                  style={{ width: "110px" }}
-                >
-                  <div className="text-2xl">{p.emoji}</div>
-                  <div className="text-[10px] sm:text-xs leading-tight mt-1">
-                    {p.label}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+          <svg
+            viewBox={`0 0 ${SIZE} ${SIZE}`}
+            className="h-full w-full drop-shadow-2xl"
+          >
+            <defs>
+              <filter id="wedgeShadow" x="-10%" y="-10%" width="120%" height="120%">
+                <feDropShadow dx="0" dy="0" stdDeviation="2" floodOpacity="0.25" />
+              </filter>
+            </defs>
 
-          {/* Center hub */}
-          <div className="absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-glow flex items-center justify-center text-2xl">
-            💗
-          </div>
+            {/* Wedges */}
+            {PRIZES.map((p, i) => (
+              <path
+                key={i}
+                d={wedgePath(i)}
+                fill={p.color}
+                stroke="#ffffff"
+                strokeWidth={3}
+              />
+            ))}
+
+            {/* Labels — rotate group to wedge center, then place text along radius */}
+            {PRIZES.map((p, i) => {
+              const centerAngle = i * segAngle + segAngle / 2 - 90;
+              // Position emoji + text along the wedge radius
+              const textRadius = R * 0.62;
+              const emojiRadius = R * 0.78;
+              const ex = R + emojiRadius * Math.cos((centerAngle * Math.PI) / 180);
+              const ey = R + emojiRadius * Math.sin((centerAngle * Math.PI) / 180);
+              const tx = R + textRadius * Math.cos((centerAngle * Math.PI) / 180);
+              const ty = R + textRadius * Math.sin((centerAngle * Math.PI) / 180);
+
+              // Rotate text so it reads outward along radius
+              const textRotate = centerAngle + 90;
+
+              // Split label into max 2 lines for fit
+              const words = p.label.split(" ");
+              const mid = Math.ceil(words.length / 2);
+              const line1 = words.slice(0, mid).join(" ");
+              const line2 = words.slice(mid).join(" ");
+
+              return (
+                <g key={`lbl-${i}`}>
+                  <text
+                    x={ex}
+                    y={ey}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fontSize="22"
+                  >
+                    {p.emoji}
+                  </text>
+                  <g transform={`rotate(${textRotate} ${tx} ${ty})`}>
+                    <text
+                      x={tx}
+                      y={ty}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fontSize="11"
+                      fontWeight="700"
+                      fill="#ffffff"
+                      style={{
+                        paintOrder: "stroke",
+                        stroke: "rgba(0,0,0,0.25)",
+                        strokeWidth: 0.6,
+                      }}
+                    >
+                      <tspan x={tx} dy="-0.4em">
+                        {line1}
+                      </tspan>
+                      {line2 && (
+                        <tspan x={tx} dy="1.1em">
+                          {line2}
+                        </tspan>
+                      )}
+                    </text>
+                  </g>
+                </g>
+              );
+            })}
+
+            {/* Outer ring */}
+            <circle
+              cx={R}
+              cy={R}
+              r={R - 2}
+              fill="none"
+              stroke="#ffffff"
+              strokeWidth={4}
+            />
+
+            {/* Center hub */}
+            <circle cx={R} cy={R} r={32} fill="#ffffff" />
+            <text
+              x={R}
+              y={R}
+              textAnchor="middle"
+              dominantBaseline="central"
+              fontSize="28"
+            >
+              💗
+            </text>
+          </svg>
         </motion.div>
       </div>
 
