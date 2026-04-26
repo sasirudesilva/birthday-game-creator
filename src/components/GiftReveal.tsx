@@ -77,6 +77,7 @@ export function GiftReveal({ onFinish }: { onFinish: () => void }) {
       transition={{ duration: 0.8 }}
       className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 py-12 text-center"
     >
+      <ScatteredLabels />
       <motion.p
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
