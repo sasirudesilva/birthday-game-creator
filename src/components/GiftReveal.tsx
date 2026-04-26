@@ -4,7 +4,13 @@ import confetti from "canvas-confetti";
 
 type Stage = "letter" | "money" | "package" | "outro";
 
-export function GiftReveal({ onFinish }: { onFinish: () => void }) {
+export function GiftReveal({
+  onFinish,
+  prize,
+}: {
+  onFinish: () => void;
+  prize?: { label: string; emoji: string } | null;
+}) {
   const [opened, setOpened] = useState(false);
   const [stage, setStage] = useState<Stage>("letter");
   const [bankNumber, setBankNumber] = useState("");
