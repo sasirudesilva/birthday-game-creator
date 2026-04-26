@@ -3,6 +3,7 @@ import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { Welcome } from "@/components/Welcome";
 import { MemoryGame } from "@/components/MemoryGame";
+import { SpinWheel } from "@/components/SpinWheel";
 import { GiftReveal } from "@/components/GiftReveal";
 import { FinalOutro } from "@/components/FinalOutro";
 import { FloatingHearts } from "@/components/FloatingHearts";
@@ -33,10 +34,13 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type Stage = "welcome" | "game" | "gift" | "outro";
+type Stage = "welcome" | "game" | "spin" | "gift" | "outro";
 
 function Index() {
   const [stage, setStage] = useState<Stage>("welcome");
+  const [prize, setPrize] = useState<{ label: string; emoji: string } | null>(
+    null,
+  );
 
   return (
     <main className="relative min-h-screen overflow-hidden">
@@ -55,10 +59,23 @@ function Index() {
           <Welcome key="welcome" onStart={() => setStage("game")} />
         )}
         {stage === "game" && (
-          <MemoryGame key="game" onWin={() => setStage("gift")} />
+          <MemoryGame key="game" onWin={() => setStage("spin")} />
+        )}
+        {stage === "spin" && (
+          <SpinWheel
+            key="spin"
+            onFinish={(p) => {
+              setPrize(p);
+              setStage("gift");
+            }}
+          />
         )}
         {stage === "gift" && (
-          <GiftReveal key="gift" onFinish={() => setStage("outro")} />
+          <GiftReveal
+            key="gift"
+            prize={prize}
+            onFinish={() => setStage("outro")}
+          />
         )}
         {stage === "outro" && (
           <FinalOutro key="outro" onReplay={() => setStage("welcome")} />

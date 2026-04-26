@@ -4,7 +4,13 @@ import confetti from "canvas-confetti";
 
 type Stage = "letter" | "money" | "package" | "outro";
 
-export function GiftReveal({ onFinish }: { onFinish: () => void }) {
+export function GiftReveal({
+  onFinish,
+  prize,
+}: {
+  onFinish: () => void;
+  prize?: { label: string; emoji: string } | null;
+}) {
   const [opened, setOpened] = useState(false);
   const [stage, setStage] = useState<Stage>("letter");
   const [bankNumber, setBankNumber] = useState("");
@@ -94,6 +100,30 @@ export function GiftReveal({ onFinish }: { onFinish: () => void }) {
       >
         මෙන්න ඔයාගේ surprise 🎁
       </motion.h2>
+
+      {prize && (
+        <motion.div
+          initial={{ scale: 0, y: 20, opacity: 0 }}
+          animate={{ scale: 1, y: 0, opacity: 1 }}
+          transition={{ delay: 0.6, type: "spring", damping: 12 }}
+          className="mt-6 inline-flex flex-col items-center gap-2"
+        >
+          <div className="text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
+            Spin එකෙන් ඔයාට ලැබුණේ
+          </div>
+          <motion.div
+            animate={{ y: [0, -4, 0] }}
+            transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+            className="glass rounded-full px-6 py-3 shadow-glow border border-rose/30 flex items-center gap-3"
+          >
+            <span className="text-3xl">{prize.emoji}</span>
+            <span className="text-lg sm:text-xl font-bold text-gradient-romance">
+              {prize.label}
+            </span>
+            <span className="text-2xl">🎀</span>
+          </motion.div>
+        </motion.div>
+      )}
 
       <AnimatePresence mode="wait">
         {!opened ? (
