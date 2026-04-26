@@ -6,6 +6,7 @@ import { MemoryGame } from "@/components/MemoryGame";
 import { GiftReveal } from "@/components/GiftReveal";
 import { FinalOutro } from "@/components/FinalOutro";
 import { FloatingHearts } from "@/components/FloatingHearts";
+import { ScatteredLabels } from "@/components/ScatteredLabels";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -47,6 +48,7 @@ function Index() {
       </div>
 
       {stage !== "outro" && <FloatingHearts />}
+      {stage !== "outro" && <ScatteredLabels />}
 
       <AnimatePresence mode="wait">
         {stage === "welcome" && (
