@@ -1,25 +1,25 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import photoPicnic from "@/assets/photo-picnic.jpg";
+import photoHands from "@/assets/photo-hands.jpg";
+import photoTattoo from "@/assets/photo-tattoo.jpg";
+import photoTeddy from "@/assets/photo-teddy.jpg";
+import photoCap from "@/assets/photo-cap.jpg";
+import photoRiver from "@/assets/photo-river.jpg";
+import photoBlue from "@/assets/photo-blue.jpg";
 import cardRose from "@/assets/card-rose.jpg";
-import cardCake from "@/assets/card-cake.jpg";
-import cardTeddy from "@/assets/card-teddy.jpg";
-import cardCheers from "@/assets/card-cheers.jpg";
-import cardGift from "@/assets/card-gift.jpg";
-import cardHeart from "@/assets/card-heart.jpg";
-import cardLetter from "@/assets/card-letter.jpg";
-import cardFlowers from "@/assets/card-flowers.jpg";
 
 type CardImage = { id: string; src: string; alt: string };
 
 const IMAGES: CardImage[] = [
+  { id: "picnic", src: photoPicnic, alt: "Picnic memory" },
+  { id: "hands", src: photoHands, alt: "Holding hands" },
+  { id: "tattoo", src: photoTattoo, alt: "N heart tattoo" },
+  { id: "teddy", src: photoTeddy, alt: "Teddy bears" },
+  { id: "cap", src: photoCap, alt: "Cap day" },
+  { id: "river", src: photoRiver, alt: "By the river" },
+  { id: "blue", src: photoBlue, alt: "Blue dress" },
   { id: "rose", src: cardRose, alt: "Pink rose" },
-  { id: "cake", src: cardCake, alt: "Birthday cupcake" },
-  { id: "teddy", src: cardTeddy, alt: "Teddy bear with heart" },
-  { id: "cheers", src: cardCheers, alt: "Champagne cheers" },
-  { id: "gift", src: cardGift, alt: "Pink gift box" },
-  { id: "heart", src: cardHeart, alt: "Glowing heart" },
-  { id: "letter", src: cardLetter, alt: "Love letter" },
-  { id: "flowers", src: cardFlowers, alt: "Tulip bouquet" },
 ];
 
 type Card = {
