@@ -48,6 +48,7 @@ function Index() {
       </div>
 
       {stage !== "outro" && <FloatingHearts />}
+      {stage !== "outro" && <ScatteredLabels />}
 
       <AnimatePresence mode="wait">
         {stage === "welcome" && (
