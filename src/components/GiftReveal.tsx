@@ -356,27 +356,28 @@ export function GiftReveal({ onFinish }: { onFinish: () => void }) {
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ type: "spring", damping: 12 }}
-                        className="mt-6 flex flex-col items-center gap-4"
+                        className="relative mt-6 flex flex-col items-center gap-4"
                       >
+                        <ScatteredLabels />
                         <motion.div
                           initial={{ scale: 0, rotate: -180 }}
                           animate={{ scale: 1, rotate: 0 }}
                           transition={{ type: "spring", damping: 10 }}
-                          className="text-7xl drop-shadow-2xl"
+                          className="text-7xl drop-shadow-2xl relative z-10"
                         >
-                          📦
+                          🎁
                         </motion.div>
-                        <h4 className="text-xl font-bold text-gradient-romance">
-                          ඔයා ඉන්න තැනටම ආවා! 🎉
+                        <h4 className="text-xl font-bold text-gradient-romance relative z-10">
+                          Gift Box 🎉
                         </h4>
-                        <p className="text-sm text-muted-foreground max-w-xs">
+                        <p className="text-sm text-muted-foreground max-w-xs relative z-10">
                           ඇතුලේ මොකද්ද කියලා... ඒක surprise එකක් 💕
                         </p>
                         <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={onFinish}
-                          className="mt-2 rounded-full bg-gradient-romance px-8 py-3 text-base font-semibold text-primary-foreground shadow-glow animate-pulse-glow"
+                          className="mt-2 rounded-full bg-gradient-romance px-8 py-3 text-base font-semibold text-primary-foreground shadow-glow animate-pulse-glow relative z-10"
                         >
                           ❤️ අන්තිමට →
                         </motion.button>
