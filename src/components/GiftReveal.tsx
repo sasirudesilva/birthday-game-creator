@@ -499,3 +499,98 @@ function DeliveryAnimation() {
     </div>
   );
 }
+
+/* ---------- Scattered Compliment Labels ---------- */
+function ScatteredLabels() {
+  const labels = [
+    {
+      text: "ඔයා හරිම ආදරණීයයි",
+      bg: "bg-rose/30",
+      top: "5%",
+      left: "2%",
+      rotate: -14,
+      delay: 0.2,
+    },
+    {
+      text: "ඔයා හරිම ලස්සනයි",
+      bg: "bg-amber-200/50",
+      top: "8%",
+      left: "55%",
+      rotate: 12,
+      delay: 0.4,
+    },
+    {
+      text: "ඔයා හරිම කරුණාවන්තයි",
+      bg: "bg-emerald-200/40",
+      top: "38%",
+      left: "-4%",
+      rotate: 8,
+      delay: 0.6,
+    },
+    {
+      text: "ඔයා හරිම හුරු බුහුටියි",
+      bg: "bg-pink-200/50",
+      top: "42%",
+      left: "62%",
+      rotate: -10,
+      delay: 0.8,
+    },
+    {
+      text: "ඔයා මගේ ලොකේ 💗",
+      bg: "bg-violet-200/40",
+      top: "78%",
+      left: "10%",
+      rotate: -6,
+      delay: 1.0,
+    },
+    {
+      text: "❤️",
+      bg: "bg-rose/40",
+      top: "72%",
+      left: "70%",
+      rotate: 15,
+      delay: 1.2,
+    },
+  ];
+
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {labels.map((l, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, scale: 0, y: 20 }}
+          animate={{
+            opacity: 1,
+            scale: 1,
+            y: [0, -6, 0],
+            rotate: [l.rotate, l.rotate + 2, l.rotate],
+          }}
+          transition={{
+            opacity: { delay: l.delay, duration: 0.5 },
+            scale: { delay: l.delay, type: "spring", damping: 10 },
+            y: {
+              delay: l.delay + 0.5,
+              duration: 3 + (i % 3),
+              repeat: Infinity,
+              ease: "easeInOut",
+            },
+            rotate: {
+              delay: l.delay + 0.5,
+              duration: 4 + (i % 2),
+              repeat: Infinity,
+              ease: "easeInOut",
+            },
+          }}
+          style={{
+            top: l.top,
+            left: l.left,
+            transform: `rotate(${l.rotate}deg)`,
+          }}
+          className={`absolute ${l.bg} backdrop-blur-sm rounded-full px-3 py-1.5 text-xs sm:text-sm font-semibold text-foreground/90 shadow-md whitespace-nowrap`}
+        >
+          {l.text}
+        </motion.div>
+      ))}
+    </div>
+  );
+}
