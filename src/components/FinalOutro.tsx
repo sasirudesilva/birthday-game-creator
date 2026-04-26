@@ -47,7 +47,7 @@ export function FinalOutro({ onReplay }: { onReplay: () => void }) {
         transition={{ delay: 1.5, duration: 1 }}
         className="mt-8 text-3xl sm:text-5xl font-bold text-gradient-romance"
       >
-        මං ඔයාට <span className="italic">ගොඩක්</span> ආදරෙයි 💗
+        මං ඔයාට <span className="italic">ගොඩක්</span> ආදරේයි පණ 💗
       </motion.h1>
 
       <motion.p
