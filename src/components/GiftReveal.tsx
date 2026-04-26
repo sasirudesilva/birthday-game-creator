@@ -359,7 +359,6 @@ export function GiftReveal({ onFinish }: { onFinish: () => void }) {
                         transition={{ type: "spring", damping: 12 }}
                         className="relative mt-6 flex flex-col items-center gap-4"
                       >
-                        <ScatteredLabels />
                         <motion.div
                           initial={{ scale: 0, rotate: -180 }}
                           animate={{ scale: 1, rotate: 0 }}
