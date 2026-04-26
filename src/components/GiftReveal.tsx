@@ -302,7 +302,7 @@ export function GiftReveal({ onFinish }: { onFinish: () => void }) {
                     අන්තිම surprise එක
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    ඔයා ඉන්න තැනටම එනවා 💕
+                    ඔයා ඉන්න තැනටම ඉක්මනට එයි 💕
                   </p>
 
                   <AnimatePresence mode="wait">

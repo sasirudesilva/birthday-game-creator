@@ -7,7 +7,7 @@ import photoTeddy from "@/assets/photo-teddy.jpg";
 import photoCap from "@/assets/photo-cap.jpg";
 import photoRiver from "@/assets/photo-river.jpg";
 import photoBlue from "@/assets/photo-blue.jpg";
-import cardRose from "@/assets/card-rose.jpg";
+import photoHeartHands from "@/assets/photo-heart-hands.jpg";
 
 type CardImage = { id: string; src: string; alt: string };
 
@@ -19,7 +19,7 @@ const IMAGES: CardImage[] = [
   { id: "cap", src: photoCap, alt: "Cap day" },
   { id: "river", src: photoRiver, alt: "By the river" },
   { id: "blue", src: photoBlue, alt: "Blue dress" },
-  { id: "rose", src: cardRose, alt: "Pink rose" },
+  { id: "hearthands", src: photoHeartHands, alt: "Heart hands" },
 ];
 
 type Card = {
