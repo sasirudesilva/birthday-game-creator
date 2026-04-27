@@ -241,6 +241,37 @@ export function MemoryGame({ onWin }: { onWin: () => void }) {
           (skip → testing)
         </button>
       </div>
+
+      {failed && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 backdrop-blur-sm px-4"
+        >
+          <motion.div
+            initial={{ scale: 0.7, y: 30, opacity: 0 }}
+            animate={{ scale: 1, y: 0, opacity: 1 }}
+            transition={{ type: "spring", damping: 14 }}
+            className="glass rounded-3xl p-8 max-w-sm text-center shadow-glow border border-rose/30"
+          >
+            <div className="text-5xl mb-3">🥺</div>
+            <h3 className="text-2xl font-bold text-gradient-romance mb-2">
+              අයියෝ! Moves {MOVE_LIMIT} ඉවරයි
+            </h3>
+            <p className="text-sm text-muted-foreground mb-6">
+              කමක් නෑ පණ 💗 ආයෙත් try කරන්න — ඔයාට පුළුවන් 💪✨
+            </p>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={reset}
+              className="w-full rounded-full bg-gradient-romance px-6 py-3 text-base font-semibold text-primary-foreground shadow-glow"
+            >
+              ↻ ආයෙත් try කරන්න
+            </motion.button>
+          </motion.div>
+        </motion.div>
+      )}
     </motion.div>
   );
 }
