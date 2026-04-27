@@ -15,7 +15,7 @@ export function Welcome({ onStart }: { onStart: () => void }) {
         transition={{ delay: 0.3, duration: 0.8 }}
         className="mb-4 text-sm uppercase tracking-[0.4em] text-muted-foreground"
       >
-        ලස්සන surprise එකක් ✨
+        🎂 Happy Birthday & 💞 Happy Anniversary
       </motion.div>
 
       <motion.h1
@@ -28,11 +28,20 @@ export function Welcome({ onStart }: { onStart: () => void }) {
         <span className="italic">මගේ ආදරේ</span> 💗
       </motion.h1>
 
+      <motion.div
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.9, duration: 0.8 }}
+        className="mt-4 inline-flex items-center gap-2 glass rounded-full px-5 py-2 text-sm sm:text-base font-semibold text-rose border border-rose/30"
+      >
+        💞 සුභ සංවත්සරයක් — අපේ දවසටත් 💍
+      </motion.div>
+
       <motion.p
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 1, duration: 0.8 }}
-        className="mt-8 max-w-xl text-lg text-muted-foreground"
+        transition={{ delay: 1.1, duration: 0.8 }}
+        className="mt-6 max-w-xl text-lg text-muted-foreground"
       >
         පොඩි game එකක් solve කරාම... ලොකු ලස්සන surprise එකක් ඔයාට 🎁✨
       </motion.p>

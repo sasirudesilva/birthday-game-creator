@@ -101,6 +101,15 @@ export function GiftReveal({
         මෙන්න ඔයාගේ surprise 🎁
       </motion.h2>
 
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.6 }}
+        className="mt-3 inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 text-xs sm:text-sm font-semibold text-rose border border-rose/30"
+      >
+        🎂 සුභ උපන්දිනක් · 💞 සුභ සංවත්සරයක්
+      </motion.div>
+
       {prize && (
         <motion.div
           initial={{ scale: 0, y: 20, opacity: 0 }}

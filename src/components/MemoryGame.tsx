@@ -52,11 +52,14 @@ function buildDeck(): Card[] {
   }));
 }
 
+const MOVE_LIMIT = 10;
+
 export function MemoryGame({ onWin }: { onWin: () => void }) {
   const [cards, setCards] = useState<Card[]>(() => buildDeck());
   const [picked, setPicked] = useState<number[]>([]);
   const [moves, setMoves] = useState(0);
   const [locked, setLocked] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   const matchedCount = useMemo(
     () => cards.filter((c) => c.matched).length,
@@ -71,6 +74,14 @@ export function MemoryGame({ onWin }: { onWin: () => void }) {
       return () => clearTimeout(t);
     }
   }, [matchedCount, total, onWin]);
+
+  // Trigger retry overlay when moves exceed limit before winning
+  useEffect(() => {
+    if (moves > MOVE_LIMIT && matchedCount < total && !failed) {
+      setFailed(true);
+      setLocked(true);
+    }
+  }, [moves, matchedCount, total, failed]);
 
   useEffect(() => {
     if (picked.length !== 2) return;
@@ -103,7 +114,7 @@ export function MemoryGame({ onWin }: { onWin: () => void }) {
   }, [picked, cards]);
 
   const handleClick = (id: number) => {
-    if (locked) return;
+    if (locked || failed) return;
     const card = cards.find((c) => c.id === id);
     if (!card || card.flipped || card.matched) return;
     setCards((prev) =>
@@ -119,6 +130,7 @@ export function MemoryGame({ onWin }: { onWin: () => void }) {
     setPicked([]);
     setMoves(0);
     setLocked(false);
+    setFailed(false);
   };
 
   return (
@@ -229,6 +241,37 @@ export function MemoryGame({ onWin }: { onWin: () => void }) {
           (skip → testing)
         </button>
       </div>
+
+      {failed && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 backdrop-blur-sm px-4"
+        >
+          <motion.div
+            initial={{ scale: 0.7, y: 30, opacity: 0 }}
+            animate={{ scale: 1, y: 0, opacity: 1 }}
+            transition={{ type: "spring", damping: 14 }}
+            className="glass rounded-3xl p-8 max-w-sm text-center shadow-glow border border-rose/30"
+          >
+            <div className="text-5xl mb-3">🥺</div>
+            <h3 className="text-2xl font-bold text-gradient-romance mb-2">
+              අයියෝ! Moves {MOVE_LIMIT} ඉවරයි
+            </h3>
+            <p className="text-sm text-muted-foreground mb-6">
+              කමක් නෑ පණ 💗 ආයෙත් try කරන්න — ඔයාට පුළුවන් 💪✨
+            </p>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={reset}
+              className="w-full rounded-full bg-gradient-romance px-6 py-3 text-base font-semibold text-primary-foreground shadow-glow"
+            >
+              ↻ ආයෙත් try කරන්න
+            </motion.button>
+          </motion.div>
+        </motion.div>
+      )}
     </motion.div>
   );
 }

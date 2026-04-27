@@ -59,6 +59,15 @@ export function FinalOutro({ onReplay }: { onReplay: () => void }) {
         සුභ උපන්දිනක් මගේ සුන්දරියට ✨
       </motion.p>
 
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2.6, duration: 0.8 }}
+        className="mt-3 inline-flex items-center gap-2 glass rounded-full px-5 py-2 text-sm font-semibold text-rose border border-rose/30"
+      >
+        💞 සුභ සංවත්සරයක් — අපේ දවසටත් 💍
+      </motion.div>
+
       {/* Floating hearts rising up */}
       {Array.from({ length: 14 }).map((_, i) => (
         <motion.div
