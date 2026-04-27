@@ -30,23 +30,21 @@ export function ScatteredLabels() {
     const rand = (min: number, max: number) =>
       Math.random() * (max - min) + min;
 
-    // Confine labels to edge bands (top, bottom, left, right) so they
-    // roam beautifully across the screen without covering center content.
+    // Strict edge bands only — never enter the center area.
     const edgePoint = () => {
       const side = Math.floor(Math.random() * 4);
-      // band thickness in vw/vh
       if (side === 0) {
         // top band
-        return { x: rand(2, 92), y: rand(2, 14) };
+        return { x: rand(1, 90), y: rand(1, 9) };
       } else if (side === 1) {
         // bottom band
-        return { x: rand(2, 92), y: rand(82, 94) };
+        return { x: rand(1, 90), y: rand(88, 96) };
       } else if (side === 2) {
         // left band
-        return { x: rand(1, 12), y: rand(10, 88) };
+        return { x: rand(0, 8), y: rand(8, 90) };
       } else {
         // right band
-        return { x: rand(82, 94), y: rand(10, 88) };
+        return { x: rand(86, 95), y: rand(8, 90) };
       }
     };
 
