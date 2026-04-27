@@ -327,7 +327,7 @@ export function GiftReveal({
           </motion.div>
         )}
       </AnimatePresence>
-      </AnimatePresence>
+
 
       {/* ============ LETTER → MONEY TRANSITION OVERLAY ============ */}
       <AnimatePresence>
