@@ -10,10 +10,18 @@ const LABELS = [
   { text: "මං ඔයාට ආදරෙයි 💕", bg: "bg-rose/40" },
   { text: "ඔයා මගේ සතුට", bg: "bg-sky-200/60" },
   { text: "ඔයා මගේ සිහිනේ ✨", bg: "bg-amber-200/70" },
+  { text: "සුභ උපන්දිනක් 🎂", bg: "bg-amber-200/70" },
+  { text: "Happy Birthday 🎉", bg: "bg-pink-200/70" },
+  { text: "🎂🎈🎁", bg: "bg-rose/40" },
+  { text: "සුභ සංවත්සරයක් 💞", bg: "bg-violet-200/60" },
+  { text: "Happy Anniversary 💍", bg: "bg-rose/50" },
+  { text: "අපේ දවස 💑", bg: "bg-pink-200/70" },
+  { text: "අවුරුදු ගානක් එක්ක 💕", bg: "bg-emerald-200/60" },
   { text: "❤️", bg: "bg-rose/50" },
   { text: "💗", bg: "bg-pink-200/70" },
   { text: "💖", bg: "bg-violet-200/60" },
   { text: "🌸", bg: "bg-emerald-200/60" },
+  { text: "🎊", bg: "bg-amber-200/70" },
 ];
 
 export function ScatteredLabels() {
