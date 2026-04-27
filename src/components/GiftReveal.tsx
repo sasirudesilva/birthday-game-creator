@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 
-type Stage = "letter" | "money" | "package" | "outro";
+type Stage = "letter" | "money" | "outro";
 
 export function GiftReveal({
   onFinish,
@@ -17,9 +17,7 @@ export function GiftReveal({
   const [transferState, setTransferState] = useState<
     "idle" | "transferring" | "done"
   >("idle");
-  const [packageState, setPackageState] = useState<
-    "idle" | "delivering" | "delivered"
-  >("idle");
+  const [transitioning, setTransitioning] = useState(false);
 
   useEffect(() => {
     const fire = (particleRatio: number, opts: confetti.Options) => {
@@ -60,19 +58,18 @@ export function GiftReveal({
     }, 3500);
   };
 
-  const goToPackage = () => setStage("package");
-
-  const orderPackage = () => {
-    setPackageState("delivering");
+  const goToMoney = () => {
+    setTransitioning(true);
+    confetti({
+      particleCount: 60,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ["#ff6fa3", "#ffd86b", "#ffffff"],
+    });
     setTimeout(() => {
-      setPackageState("delivered");
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.5 },
-        colors: ["#ff6fa3", "#ffd86b", "#ffffff"],
-      });
-    }, 4000);
+      setStage("money");
+      setTransitioning(false);
+    }, 1600);
   };
 
   return (
@@ -160,8 +157,8 @@ export function GiftReveal({
           >
             {/* Stage indicator */}
             <div className="flex items-center justify-center gap-2">
-              {(["letter", "money", "package"] as Stage[]).map((s, i) => {
-                const order = ["letter", "money", "package"];
+              {(["letter", "money"] as Stage[]).map((s, i) => {
+                const order = ["letter", "money"];
                 const currentIdx = order.indexOf(stage);
                 const active = i <= currentIdx;
                 return (
@@ -205,7 +202,7 @@ export function GiftReveal({
                   <motion.button
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
-                    onClick={() => setStage("money")}
+                    onClick={goToMoney}
                     className="mt-6 w-full rounded-full bg-gradient-romance px-6 py-3 text-base font-semibold text-primary-foreground shadow-glow"
                   >
                     ඊළඟ surprise එක බලන්න →
@@ -316,107 +313,8 @@ export function GiftReveal({
                         <motion.button
                           whileHover={{ scale: 1.03 }}
                           whileTap={{ scale: 0.97 }}
-                          onClick={goToPackage}
-                          className="mt-4 w-full rounded-full bg-gradient-romance px-6 py-3 text-base font-semibold text-primary-foreground shadow-glow"
-                        >
-                          තවත් එකක් තියනවා... →
-                        </motion.button>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              )}
-
-              {/* ============ STAGE 3: CUTE PACKAGE ============ */}
-              {stage === "package" && (
-                <motion.div
-                  key="package"
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -30 }}
-                  transition={{ duration: 0.5 }}
-                  className="glass rounded-3xl p-8 shadow-glow text-center"
-                >
-                  <div className="mb-2 text-4xl">🎀</div>
-                  <h3 className="text-2xl sm:text-3xl font-bold text-gradient-romance mb-1">
-                    අන්තිම surprise එක
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    ඔයා ඉන්න තැනටම ඉක්මනට එයි 💕
-                  </p>
-
-                  <AnimatePresence mode="wait">
-                    {packageState === "idle" && (
-                      <motion.div
-                        key="order"
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -15 }}
-                        className="mt-6 flex flex-col items-center gap-5"
-                      >
-                        <motion.div
-                          animate={{ y: [0, -10, 0], rotate: [-3, 3, -3] }}
-                          transition={{ duration: 2.5, repeat: Infinity }}
-                          className="text-7xl drop-shadow-2xl"
-                        >
-                          🎁
-                        </motion.div>
-                        <p className="text-sm text-foreground/80 max-w-xs">
-                          පොඩි surprise package එකක් ඔයා ඉන්න තැනටම යවනවා ✨
-                        </p>
-                        <motion.button
-                          whileHover={{ scale: 1.03 }}
-                          whileTap={{ scale: 0.97 }}
-                          onClick={orderPackage}
-                          className="w-full rounded-full bg-gradient-romance px-6 py-3 text-base font-semibold text-primary-foreground shadow-glow"
-                        >
-                          මට යවන්න 🚚
-                        </motion.button>
-                      </motion.div>
-                    )}
-
-                    {packageState === "delivering" && (
-                      <motion.div
-                        key="delivering"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="mt-8 flex flex-col items-center gap-6"
-                      >
-                        <DeliveryAnimation />
-                        <p className="text-sm text-muted-foreground animate-pulse">
-                          ඔයා ඉන්න තැනට එනවා...
-                        </p>
-                      </motion.div>
-                    )}
-
-                    {packageState === "delivered" && (
-                      <motion.div
-                        key="delivered"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ type: "spring", damping: 12 }}
-                        className="relative mt-6 flex flex-col items-center gap-4"
-                      >
-                        <motion.div
-                          initial={{ scale: 0, rotate: -180 }}
-                          animate={{ scale: 1, rotate: 0 }}
-                          transition={{ type: "spring", damping: 10 }}
-                          className="text-7xl drop-shadow-2xl relative z-10"
-                        >
-                          🎁
-                        </motion.div>
-                        <h4 className="text-xl font-bold text-gradient-romance relative z-10">
-                          Gift Box 🎉
-                        </h4>
-                        <p className="text-sm text-muted-foreground max-w-xs relative z-10">
-                          ඇතුලේ මොකද්ද කියලා... ඒක surprise එකක් 💕
-                        </p>
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
                           onClick={onFinish}
-                          className="mt-2 rounded-full bg-gradient-romance px-8 py-3 text-base font-semibold text-primary-foreground shadow-glow animate-pulse-glow relative z-10"
+                          className="mt-4 w-full rounded-full bg-gradient-romance px-6 py-3 text-base font-semibold text-primary-foreground shadow-glow animate-pulse-glow"
                         >
                           ❤️ අන්තිමට →
                         </motion.button>
@@ -426,6 +324,73 @@ export function GiftReveal({
                 </motion.div>
               )}
             </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+
+      {/* ============ LETTER → MONEY TRANSITION OVERLAY ============ */}
+      <AnimatePresence>
+        {transitioning && (
+          <motion.div
+            key="transition"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 backdrop-blur-md pointer-events-none"
+          >
+            {/* Letter folding away */}
+            <motion.div
+              initial={{ scale: 1, rotate: 0, y: 0, opacity: 1 }}
+              animate={{
+                scale: [1, 1.1, 0.4],
+                rotate: [0, -8, 12],
+                y: [0, -20, 80],
+                opacity: [1, 1, 0],
+              }}
+              transition={{ duration: 1.2, times: [0, 0.4, 1], ease: "easeInOut" }}
+              className="absolute text-7xl drop-shadow-2xl"
+            >
+              💌
+            </motion.div>
+
+            {/* Sparkle burst */}
+            {Array.from({ length: 12 }).map((_, i) => {
+              const angle = (i / 12) * Math.PI * 2;
+              const r = 140;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ x: 0, y: 0, opacity: 0, scale: 0 }}
+                  animate={{
+                    x: Math.cos(angle) * r,
+                    y: Math.sin(angle) * r,
+                    opacity: [0, 1, 0],
+                    scale: [0, 1.2, 0],
+                  }}
+                  transition={{ duration: 1.1, delay: 0.3, ease: "easeOut" }}
+                  className="absolute text-2xl"
+                >
+                  {i % 2 === 0 ? "✨" : "💗"}
+                </motion.div>
+              );
+            })}
+
+            {/* Money envelope arriving */}
+            <motion.div
+              initial={{ scale: 0, rotate: -180, opacity: 0, y: 60 }}
+              animate={{
+                scale: [0, 1.2, 1],
+                rotate: [-180, 10, 0],
+                opacity: [0, 1, 1],
+                y: [60, -10, 0],
+              }}
+              transition={{ duration: 0.9, delay: 0.6, ease: "easeOut" }}
+              className="absolute text-7xl drop-shadow-2xl"
+            >
+              💸
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -487,54 +452,3 @@ function TransferAnimation() {
   );
 }
 
-/* ---------- Delivery Truck Animation ---------- */
-function DeliveryAnimation() {
-  return (
-    <div className="relative w-full max-w-sm h-24 overflow-hidden">
-      {/* Road */}
-      <div className="absolute bottom-3 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-rose to-transparent" />
-      <div className="absolute bottom-2 left-0 right-0 flex justify-around text-[8px] text-muted-foreground">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <span key={i}>•</span>
-        ))}
-      </div>
-
-      {/* House at the end */}
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 0.2 }}
-        className="absolute right-2 bottom-4 text-3xl"
-      >
-        🏠
-      </motion.div>
-
-      {/* Moving truck */}
-      <motion.div
-        initial={{ x: -60 }}
-        animate={{ x: "calc(100% - 90px)" }}
-        transition={{ duration: 3.5, ease: "easeInOut" }}
-        className="absolute bottom-4 text-4xl"
-      >
-        🚚
-      </motion.div>
-
-      {/* Floating hearts trail */}
-      {[0, 0.6, 1.2, 1.8, 2.4].map((delay, i) => (
-        <motion.div
-          key={i}
-          initial={{ opacity: 0, y: 0, x: 0 }}
-          animate={{
-            opacity: [0, 1, 0],
-            y: [-5, -25],
-            x: [0, 10],
-          }}
-          transition={{ duration: 1.2, delay, repeat: 1 }}
-          className="absolute bottom-10 left-8 text-sm"
-        >
-          💗
-        </motion.div>
-      ))}
-    </div>
-  );
-}
