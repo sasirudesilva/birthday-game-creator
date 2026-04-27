@@ -42,7 +42,8 @@ export function SpinWheel({
     setSpinning(true);
     setResult(null);
 
-    const chosen = Math.floor(Math.random() * N);
+    // Always land on "Pick Anything You Want!"
+    const chosen = PRIZES.findIndex((p) => p.label === "Pick Anything You Want!");
     const turns = 6;
     // Pointer is at top. Segment i center angle (cw from top) = i*segAngle + segAngle/2
     const targetAngle = 360 - (chosen * segAngle + segAngle / 2);
