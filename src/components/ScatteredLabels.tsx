@@ -25,42 +25,42 @@ const LABELS = [
 ];
 
 export function ScatteredLabels() {
-  // Generate per-label random waypoints across the whole viewport (in vw/vh).
+  // Keep each label on one edge lane only. If a label jumps between edges,
+  // the tween crosses the center, so every path is locked to top/bottom/left/right.
   const items = useMemo(() => {
     const rand = (min: number, max: number) =>
       Math.random() * (max - min) + min;
 
-    // Strict edge bands only — never enter the center area.
-    const edgePoint = () => {
-      const side = Math.floor(Math.random() * 4);
+    const edgePath = (side: number) => {
       if (side === 0) {
-        // top band
-        return { x: rand(1, 90), y: rand(1, 9) };
-      } else if (side === 1) {
-        // bottom band
-        return { x: rand(1, 90), y: rand(88, 96) };
-      } else if (side === 2) {
-        // left band
-        return { x: rand(0, 8), y: rand(8, 90) };
-      } else {
-        // right band
-        return { x: rand(86, 95), y: rand(8, 90) };
+        const y = rand(1, 8);
+        return Array.from({ length: 6 }, () => ({ x: rand(-10, 96), y }));
       }
+      if (side === 1) {
+        const y = rand(90, 97);
+        return Array.from({ length: 6 }, () => ({ x: rand(-10, 96), y }));
+      }
+      if (side === 2) {
+        const x = rand(-2, 7);
+        return Array.from({ length: 6 }, () => ({ x, y: rand(5, 92) }));
+      }
+      const x = rand(88, 98);
+      return Array.from({ length: 6 }, () => ({ x, y: rand(5, 92) }));
     };
 
     return LABELS.map((l, i) => {
-      const waypoints = Array.from({ length: 6 }, () => ({
-        ...edgePoint(),
-        r: rand(-12, 12),
+      const side = i % 4;
+      const waypoints = edgePath(side).map((point) => ({
+        ...point,
+        r: rand(-10, 10),
       }));
-      // Loop back to the first point so motion is seamless
       waypoints.push(waypoints[0]);
 
       return {
         ...l,
         waypoints,
-        duration: rand(32, 52), // long, slow drift around the edges
-        delay: i * 0.35,
+        duration: rand(30, 48),
+        delay: i * 0.25,
       };
     });
   }, []);
