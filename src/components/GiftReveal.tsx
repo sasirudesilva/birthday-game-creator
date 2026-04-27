@@ -327,6 +327,73 @@ export function GiftReveal({
           </motion.div>
         )}
       </AnimatePresence>
+      </AnimatePresence>
+
+      {/* ============ LETTER → MONEY TRANSITION OVERLAY ============ */}
+      <AnimatePresence>
+        {transitioning && (
+          <motion.div
+            key="transition"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 backdrop-blur-md pointer-events-none"
+          >
+            {/* Letter folding away */}
+            <motion.div
+              initial={{ scale: 1, rotate: 0, y: 0, opacity: 1 }}
+              animate={{
+                scale: [1, 1.1, 0.4],
+                rotate: [0, -8, 12],
+                y: [0, -20, 80],
+                opacity: [1, 1, 0],
+              }}
+              transition={{ duration: 1.2, times: [0, 0.4, 1], ease: "easeInOut" }}
+              className="absolute text-7xl drop-shadow-2xl"
+            >
+              💌
+            </motion.div>
+
+            {/* Sparkle burst */}
+            {Array.from({ length: 12 }).map((_, i) => {
+              const angle = (i / 12) * Math.PI * 2;
+              const r = 140;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ x: 0, y: 0, opacity: 0, scale: 0 }}
+                  animate={{
+                    x: Math.cos(angle) * r,
+                    y: Math.sin(angle) * r,
+                    opacity: [0, 1, 0],
+                    scale: [0, 1.2, 0],
+                  }}
+                  transition={{ duration: 1.1, delay: 0.3, ease: "easeOut" }}
+                  className="absolute text-2xl"
+                >
+                  {i % 2 === 0 ? "✨" : "💗"}
+                </motion.div>
+              );
+            })}
+
+            {/* Money envelope arriving */}
+            <motion.div
+              initial={{ scale: 0, rotate: -180, opacity: 0, y: 60 }}
+              animate={{
+                scale: [0, 1.2, 1],
+                rotate: [-180, 10, 0],
+                opacity: [0, 1, 1],
+                y: [60, -10, 0],
+              }}
+              transition={{ duration: 0.9, delay: 0.6, ease: "easeOut" }}
+              className="absolute text-7xl drop-shadow-2xl"
+            >
+              💸
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
@@ -385,54 +452,3 @@ function TransferAnimation() {
   );
 }
 
-/* ---------- Delivery Truck Animation ---------- */
-function DeliveryAnimation() {
-  return (
-    <div className="relative w-full max-w-sm h-24 overflow-hidden">
-      {/* Road */}
-      <div className="absolute bottom-3 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-rose to-transparent" />
-      <div className="absolute bottom-2 left-0 right-0 flex justify-around text-[8px] text-muted-foreground">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <span key={i}>•</span>
-        ))}
-      </div>
-
-      {/* House at the end */}
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 0.2 }}
-        className="absolute right-2 bottom-4 text-3xl"
-      >
-        🏠
-      </motion.div>
-
-      {/* Moving truck */}
-      <motion.div
-        initial={{ x: -60 }}
-        animate={{ x: "calc(100% - 90px)" }}
-        transition={{ duration: 3.5, ease: "easeInOut" }}
-        className="absolute bottom-4 text-4xl"
-      >
-        🚚
-      </motion.div>
-
-      {/* Floating hearts trail */}
-      {[0, 0.6, 1.2, 1.8, 2.4].map((delay, i) => (
-        <motion.div
-          key={i}
-          initial={{ opacity: 0, y: 0, x: 0 }}
-          animate={{
-            opacity: [0, 1, 0],
-            y: [-5, -25],
-            x: [0, 10],
-          }}
-          transition={{ duration: 1.2, delay, repeat: 1 }}
-          className="absolute bottom-10 left-8 text-sm"
-        >
-          💗
-        </motion.div>
-      ))}
-    </div>
-  );
-}
