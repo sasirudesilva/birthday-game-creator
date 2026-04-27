@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 
-type Stage = "letter" | "money" | "package" | "outro";
+type Stage = "letter" | "money" | "outro";
 
 export function GiftReveal({
   onFinish,
@@ -17,9 +17,7 @@ export function GiftReveal({
   const [transferState, setTransferState] = useState<
     "idle" | "transferring" | "done"
   >("idle");
-  const [packageState, setPackageState] = useState<
-    "idle" | "delivering" | "delivered"
-  >("idle");
+  const [transitioning, setTransitioning] = useState(false);
 
   useEffect(() => {
     const fire = (particleRatio: number, opts: confetti.Options) => {
@@ -60,19 +58,18 @@ export function GiftReveal({
     }, 3500);
   };
 
-  const goToPackage = () => setStage("package");
-
-  const orderPackage = () => {
-    setPackageState("delivering");
+  const goToMoney = () => {
+    setTransitioning(true);
+    confetti({
+      particleCount: 60,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ["#ff6fa3", "#ffd86b", "#ffffff"],
+    });
     setTimeout(() => {
-      setPackageState("delivered");
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.5 },
-        colors: ["#ff6fa3", "#ffd86b", "#ffffff"],
-      });
-    }, 4000);
+      setStage("money");
+      setTransitioning(false);
+    }, 1600);
   };
 
   return (
