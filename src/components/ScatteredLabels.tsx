@@ -22,12 +22,30 @@ export function ScatteredLabels() {
     const rand = (min: number, max: number) =>
       Math.random() * (max - min) + min;
 
+    // Confine labels to edge bands (top, bottom, left, right) so they
+    // roam beautifully across the screen without covering center content.
+    const edgePoint = () => {
+      const side = Math.floor(Math.random() * 4);
+      // band thickness in vw/vh
+      if (side === 0) {
+        // top band
+        return { x: rand(2, 92), y: rand(2, 14) };
+      } else if (side === 1) {
+        // bottom band
+        return { x: rand(2, 92), y: rand(82, 94) };
+      } else if (side === 2) {
+        // left band
+        return { x: rand(1, 12), y: rand(10, 88) };
+      } else {
+        // right band
+        return { x: rand(82, 94), y: rand(10, 88) };
+      }
+    };
+
     return LABELS.map((l, i) => {
-      // 5 waypoints spread across the screen so it visibly roams everywhere
-      const waypoints = Array.from({ length: 5 }, () => ({
-        x: rand(2, 88), // vw — keep small margin from edges
-        y: rand(4, 88), // vh
-        r: rand(-15, 15),
+      const waypoints = Array.from({ length: 6 }, () => ({
+        ...edgePoint(),
+        r: rand(-12, 12),
       }));
       // Loop back to the first point so motion is seamless
       waypoints.push(waypoints[0]);
@@ -35,8 +53,8 @@ export function ScatteredLabels() {
       return {
         ...l,
         waypoints,
-        duration: rand(28, 46), // long, slow drift across the screen
-        delay: i * 0.4,
+        duration: rand(32, 52), // long, slow drift around the edges
+        delay: i * 0.35,
       };
     });
   }, []);
