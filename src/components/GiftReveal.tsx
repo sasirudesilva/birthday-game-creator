@@ -157,8 +157,8 @@ export function GiftReveal({
           >
             {/* Stage indicator */}
             <div className="flex items-center justify-center gap-2">
-              {(["letter", "money", "package"] as Stage[]).map((s, i) => {
-                const order = ["letter", "money", "package"];
+              {(["letter", "money"] as Stage[]).map((s, i) => {
+                const order = ["letter", "money"];
                 const currentIdx = order.indexOf(stage);
                 const active = i <= currentIdx;
                 return (
@@ -202,7 +202,7 @@ export function GiftReveal({
                   <motion.button
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
-                    onClick={() => setStage("money")}
+                    onClick={goToMoney}
                     className="mt-6 w-full rounded-full bg-gradient-romance px-6 py-3 text-base font-semibold text-primary-foreground shadow-glow"
                   >
                     ඊළඟ surprise එක බලන්න →
@@ -313,10 +313,11 @@ export function GiftReveal({
                         <motion.button
                           whileHover={{ scale: 1.03 }}
                           whileTap={{ scale: 0.97 }}
-                          onClick={goToPackage}
-                          className="mt-4 w-full rounded-full bg-gradient-romance px-6 py-3 text-base font-semibold text-primary-foreground shadow-glow"
+                          onClick={onFinish}
+                          className="mt-4 w-full rounded-full bg-gradient-romance px-6 py-3 text-base font-semibold text-primary-foreground shadow-glow animate-pulse-glow"
                         >
-                          තවත් එකක් තියනවා... →
+                          ❤️ අන්තිමට →
+                        </motion.button>
                         </motion.button>
                       </motion.div>
                     )}
