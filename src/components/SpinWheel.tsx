@@ -19,6 +19,7 @@ export function SpinWheel({
   const [rotation, setRotation] = useState(0);
   const [spinning, setSpinning] = useState(false);
   const [result, setResult] = useState<number | null>(null);
+  const [spinCount, setSpinCount] = useState(0);
 
   const N = PRIZES.length;
   const segAngle = 360 / N;
@@ -37,15 +38,19 @@ export function SpinWheel({
     return `M ${R} ${R} L ${sx} ${sy} A ${R} ${R} 0 ${largeArc} 1 ${ex} ${ey} Z`;
   };
 
-  const spin = () => {
+  const spin = (forceRandom = false) => {
     if (spinning) return;
     setSpinning(true);
     setResult(null);
 
-    // Always land on "Pick Anything You Want!"
-    const chosen = PRIZES.findIndex((p) => p.label === "Pick Anything You Want!");
+    // First spin = always "Pick Anything You Want!". Subsequent = random.
+    let chosen: number;
+    if (spinCount === 0 && !forceRandom) {
+      chosen = PRIZES.findIndex((p) => p.label === "Pick Anything You Want!");
+    } else {
+      chosen = Math.floor(Math.random() * PRIZES.length);
+    }
     const turns = 6;
-    // Pointer is at top. Segment i center angle (cw from top) = i*segAngle + segAngle/2
     const targetAngle = 360 - (chosen * segAngle + segAngle / 2);
     const finalRotation =
       rotation + turns * 360 + (targetAngle - (rotation % 360));
@@ -55,6 +60,7 @@ export function SpinWheel({
     setTimeout(() => {
       setSpinning(false);
       setResult(chosen);
+      setSpinCount((c) => c + 1);
       confetti({
         particleCount: 140,
         spread: 90,
@@ -64,12 +70,17 @@ export function SpinWheel({
     }, 4500);
   };
 
+  const handleSpinAgain = () => {
+    setResult(null);
+    spin(true);
+  };
+
   const handleContinue = () => {
     if (result === null) return;
     const prize = PRIZES[result];
     if (prize.label === "Spin Again!") {
       setResult(null);
-      spin();
+      spin(true);
       return;
     }
     onFinish({ label: prize.label, emoji: prize.emoji });
@@ -241,7 +252,7 @@ export function SpinWheel({
         <motion.button
           whileHover={{ scale: spinning ? 1 : 1.05 }}
           whileTap={{ scale: spinning ? 1 : 0.95 }}
-          onClick={result === null ? spin : handleContinue}
+          onClick={result === null ? () => spin() : handleContinue}
           disabled={spinning}
           className="rounded-full bg-gradient-romance px-8 py-3 text-base font-semibold text-primary-foreground shadow-glow disabled:opacity-50"
         >
@@ -253,6 +264,19 @@ export function SpinWheel({
                 ? "Spin Again 🔄"
                 : "Continue →"}
         </motion.button>
+
+        {result !== null && !spinning && PRIZES[result].label !== "Spin Again!" && (
+          <motion.button
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleSpinAgain}
+            className="rounded-full glass px-6 py-2 text-sm font-medium text-foreground/80 hover:text-foreground border border-rose/30"
+          >
+            ↻ ආයෙත් කරකවලා බලන්න
+          </motion.button>
+        )}
       </div>
     </motion.div>
   );
