@@ -52,11 +52,14 @@ function buildDeck(): Card[] {
   }));
 }
 
+const MOVE_LIMIT = 10;
+
 export function MemoryGame({ onWin }: { onWin: () => void }) {
   const [cards, setCards] = useState<Card[]>(() => buildDeck());
   const [picked, setPicked] = useState<number[]>([]);
   const [moves, setMoves] = useState(0);
   const [locked, setLocked] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   const matchedCount = useMemo(
     () => cards.filter((c) => c.matched).length,
@@ -71,6 +74,14 @@ export function MemoryGame({ onWin }: { onWin: () => void }) {
       return () => clearTimeout(t);
     }
   }, [matchedCount, total, onWin]);
+
+  // Trigger retry overlay when moves exceed limit before winning
+  useEffect(() => {
+    if (moves > MOVE_LIMIT && matchedCount < total && !failed) {
+      setFailed(true);
+      setLocked(true);
+    }
+  }, [moves, matchedCount, total, failed]);
 
   useEffect(() => {
     if (picked.length !== 2) return;
@@ -103,7 +114,7 @@ export function MemoryGame({ onWin }: { onWin: () => void }) {
   }, [picked, cards]);
 
   const handleClick = (id: number) => {
-    if (locked) return;
+    if (locked || failed) return;
     const card = cards.find((c) => c.id === id);
     if (!card || card.flipped || card.matched) return;
     setCards((prev) =>
@@ -119,6 +130,7 @@ export function MemoryGame({ onWin }: { onWin: () => void }) {
     setPicked([]);
     setMoves(0);
     setLocked(false);
+    setFailed(false);
   };
 
   return (
