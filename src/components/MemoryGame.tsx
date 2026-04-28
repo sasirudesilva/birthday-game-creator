@@ -52,7 +52,7 @@ function buildDeck(): Card[] {
   }));
 }
 
-const MOVE_LIMIT = 10;
+const MOVE_LIMIT = 12;
 
 export function MemoryGame({ onWin }: { onWin: () => void }) {
   const [cards, setCards] = useState<Card[]>(() => buildDeck());
@@ -99,6 +99,7 @@ export function MemoryGame({ onWin }: { onWin: () => void }) {
         );
         setPicked([]);
         setLocked(false);
+        setMoves((m) => Math.max(0, m - 1));
       }, 500);
     } else {
       setTimeout(() => {
@@ -233,12 +234,6 @@ export function MemoryGame({ onWin }: { onWin: () => void }) {
           className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
         >
           ↻ අලුතින් පටන් ගන්න
-        </button>
-        <button
-          onClick={onWin}
-          className="text-xs text-muted-foreground/60 underline-offset-4 hover:text-muted-foreground hover:underline"
-        >
-          (skip → testing)
         </button>
       </div>
 

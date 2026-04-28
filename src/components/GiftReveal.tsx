@@ -240,37 +240,41 @@ export function GiftReveal({
                         className="mt-6 space-y-4 text-left"
                       >
                         <div className="flex items-center justify-center gap-2 py-3">
-                          <span className="text-4xl font-bold text-gradient-romance">
-                            රු. 5,000
+                          <span className="text-3xl">🎁</span>
+                          <span className="text-xl font-semibold text-gradient-romance">
+                            පොඩි surprise එකක් 💗
                           </span>
-                          <span className="text-2xl">💰</span>
                         </div>
 
                         <div>
                           <label className="block text-xs uppercase tracking-widest text-muted-foreground mb-1">
-                            ඔයාගේ Bank Account Number
+                            ඔයාගේ Bank Account එකේ අන්තිම digits 4
                           </label>
                           <input
                             type="text"
+                            inputMode="numeric"
                             value={bankNumber}
                             onChange={(e) => {
-                              const v = e.target.value.replace(/[^0-9\s-]/g, "");
+                              const v = e.target.value.replace(/[^0-9]/g, "").slice(0, 4);
                               setBankNumber(v);
                             }}
-                            placeholder="XXXX XXXX XXXX XXXX"
-                            maxLength={30}
-                            className="w-full rounded-xl border border-border bg-input px-4 py-3 text-foreground text-center text-lg tracking-widest outline-none focus:ring-2 focus:ring-rose"
+                            placeholder="XXXX"
+                            maxLength={4}
+                            className="w-full rounded-xl border border-border bg-input px-4 py-3 text-foreground text-center text-2xl font-bold tracking-[0.5em] outline-none focus:ring-2 focus:ring-rose"
                           />
+                          <p className="mt-2 text-center text-xs text-muted-foreground">
+                            (security එකට last 4 digits විතරක් 🔒)
+                          </p>
                         </div>
 
                         <motion.button
                           whileHover={{ scale: 1.03 }}
                           whileTap={{ scale: 0.97 }}
                           onClick={sendTransfer}
-                          disabled={!bankNumber.trim() || bankNumber.trim().length < 5}
+                          disabled={bankNumber.trim().length !== 4}
                           className="w-full rounded-full bg-gradient-romance px-6 py-3 text-base font-semibold text-primary-foreground shadow-glow disabled:opacity-40"
                         >
-                          Send my gift 💸
+                          Surprise එක යවන්න 💸
                         </motion.button>
                       </motion.div>
                     )}
@@ -307,10 +311,10 @@ export function GiftReveal({
                           ✅
                         </motion.div>
                         <h4 className="text-xl font-bold text-gradient-romance">
-                          Transfer successful!
+                          Surprise එක යවලා! 🎉
                         </h4>
                         <p className="text-sm text-muted-foreground">
-                          රු. 5,000 ඔයාගේ account එකට ගියා 💗
+                          ඔයාගේ account එක (••••{bankNumber}) එකට පොඩි surprise එකක් ගියා 💗
                         </p>
                         <motion.button
                           whileHover={{ scale: 1.03 }}
