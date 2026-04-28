@@ -52,7 +52,7 @@ function buildDeck(): Card[] {
   }));
 }
 
-const MOVE_LIMIT = 12;
+const MOVE_LIMIT = 20;
 
 export function MemoryGame({ onWin }: { onWin: () => void }) {
   const [cards, setCards] = useState<Card[]>(() => buildDeck());
